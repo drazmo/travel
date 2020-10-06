@@ -38,25 +38,26 @@ app.get('/test', function(req, res) {
     res.send(mockAPIResponse)
 })
 
-app.post('/travel', async function(req, res) {
-    let result = await processText(req.body.text);
+app.post('/city', async function(req, res) {
+    let result = await getCityInfo(req.body.city);
 
     if (result === null) {
-        return res.statusCode(401).json({ code: 401, error: true, errorMsg: 'Could not communicated with NLP server.' })
+        return res.statusCode(401).json({ code: 401, error: true, errorMsg: 'Could not communicate with Geonames server.' })
     }
 
     res.json({ code: 200, data: result });
 });
 
-async function processText(msg) {
+async function getCityInfo(city) {
     const model = 'general';
     const lang = 'en';
 
-    const text = querystring.escape(msg)
-    console.log('msg = ' + text);
+    const query = querystring.escape(city)
+    console.log('City Search = ' + query);
 
     try {
-        let response = await fetch(`https://<SERVER>?key=${process.env.API_KEY}&lang=${lang}&txt=${text}&model=${model}&doc=undefined&url=`, {
+        //example call: http://api.geonames.org/searchJSON?q=london&maxRows=10&username=drazmo
+        let response = await fetch(`http://api.geonames.org/searchJSON?q=?${query}&maxRows=10&username=${process.env.GEONAMES_USER}`, {
             method: "post",
             headers: { 'Accept': 'application/json' }
         });
