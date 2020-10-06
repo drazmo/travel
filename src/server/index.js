@@ -48,6 +48,16 @@ app.post('/city', async function(req, res) {
     res.json({ code: 200, data: result });
 });
 
+app.post('/forecast', async function(req, res) {
+    let result = await getCityForecast(req.body.city);
+
+    if (result === null) {
+        return res.statusCode(401).json({ code: 401, error: true, errorMsg: 'Could not communicate with Weather bit server.' })
+    }
+
+    res.json({ code: 200, data: result });
+});
+
 async function getCityInfo(city) {
     const model = 'general';
     const lang = 'en';
@@ -58,6 +68,29 @@ async function getCityInfo(city) {
     try {
         //example call: http://api.geonames.org/searchJSON?q=london&maxRows=10&username=drazmo
         let response = await fetch(`http://api.geonames.org/searchJSON?q=?${query}&maxRows=10&username=${process.env.GEONAMES_USER}`, {
+            method: "post",
+            headers: { 'Accept': 'application/json' }
+        });
+
+        if (response.status !== 200) throw new Error('Error detected communicating with meaning cloud.');
+
+        return response.json();
+    } catch (e) {
+        console.log("Error processing text.", e)
+        return null;
+    }
+}
+
+async function getCityForecast(city) {
+    const model = 'general';
+    const lang = 'en';
+
+    const query = querystring.escape(city)
+    console.log('City Search = ' + query);
+
+    try {
+        //example call: https://api.weatherbit.io/v2.0/forecast/daily?city=Raleigh,NC&key=API_KEY
+        let response = await fetch(`https://api.weatherbit.io/v2.0/forecast/daily?city=${city}&key=API_KEY${process.env.WEATHER_BIT_API}`, {
             method: "post",
             headers: { 'Accept': 'application/json' }
         });
