@@ -9,13 +9,34 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
     mode: 'development',
     devtool: 'source-map',
-    entry: './src/client/index.js',
+    entry: {
+        polyfill: 'babel-polyfill',
+        app: './src/client/index.js',
+    },
     output: {
         libraryTarget: 'var',
         library: 'Client'
     },
     module: {
+        // rules: [{
+        //         test: /\.(png|jpg|gif|svg)$/,
+        //         exclude: [
+        //             path.resolve(__dirname, './node_modules'),
+        //         ],
+        //         use: {
+        //             loader: 'file-loader',
+        //             options: {
+        //                 name: '[path][name]-[hash].[ext]',
+        //                 outputPath: '../',
+        //                 publicPath: '/dist',
+        //             },
+        //         }
+        //     },
         rules: [{
+                test: /\.(png|jpg)$/,
+                loader: "url-loader",
+            },
+            {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 loader: 'babel-loader'
@@ -31,8 +52,7 @@ module.exports = {
             {
                 test: /\.scss$/,
                 use: ['style-loader', 'css-loader', 'sass-loader']
-            },
-
+            }
         ]
     },
     plugins: [
