@@ -1,11 +1,15 @@
 # Geebers Travel App
 Guillermo Pedraza for Udacity
 
-TODO Services
+Allows user to enter a destination and travel start and end dates. Server will then display the forecasted weather if available. Only 16 days are available from WeatherBit.  It returns city information provided by GeoNames. Finally, three photos of the destination provided by PixaBay are displayed. 
 
 
 ## Setting up
+Add API Keys to .env file for GeoNames, WeatherBit and Pixabay.
 
+GEONAMES_USER=<USER_NAME>  
+WEATHER_BIT_API=<API_KEY>  
+PIXBAY=<API_KEY>  
 
 To install support:
 - `npm install`
