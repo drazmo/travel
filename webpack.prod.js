@@ -10,7 +10,10 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     mode: 'production',
-    entry: './src/client/index.js',
+    entry: {
+        polyfill: 'babel-polyfill',
+        app: './src/client/index.js',
+    },
     output: {
         libraryTarget: 'var',
         library: 'Client'
@@ -20,6 +23,10 @@ module.exports = {
     },
     module: {
         rules: [{
+                test: /\.(png|jpg)$/,
+                loader: "url-loader",
+            },
+            {
                 test: /\.js$/,
                 exclude: /node_modules/,
                 loader: 'babel-loader'

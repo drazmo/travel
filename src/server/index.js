@@ -114,7 +114,7 @@ async function getCityForecast(city, startDate, endDate) {
 
         while (dateUtils.formatDate(nextDate) != dateUtils.formatDate(endDate)) {
             nextDate = dateUtils.addDays(nextDate, 1);
-            dates.push(formatDate(nextDate));
+            dates.push(dateUtils.formatDate(nextDate));
         }
 
         response = await response.json();
