@@ -1,7 +1,7 @@
 var path = require('path')
 var https = require('follow-redirects').https;
 var fs = require('fs');
-var dateUtils = require("dateUtils");
+var dateUtils = require("./dateUtils");
 
 const express = require('express')
 const bodyParser = require('body-parser');
