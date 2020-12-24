@@ -1,4 +1,19 @@
+@mixin border-radius ( $value: 3px) {
+    -webkit-border-radius: $value;
+    -moz-border-radius: $value;
+    border-radius: $value;
+    // keeps background from busting out of border
+    -webkit-background-clip: padding-box;
+    -moz-background-clip: padding;
+    background-clip: padding-box;
+}
+
 footer {
+    background: rgba(255, 255, 255, .75);
+    max-width: 840px;
+    margin: 100px auto;
+    padding: 10px;
+    @include border-radius(20px);
     p {
         text-align: center;
     }

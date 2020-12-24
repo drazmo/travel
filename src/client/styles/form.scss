@@ -8,10 +8,15 @@
     background-clip: padding-box;
 }
 
+p.info {
+    padding-bottom: 32px;
+    padding-top: 10px;
+    text-align: center;
+}
+
 form {
     border: 0px solid #545454;
     border-radius: 3px;
-    padding: 40px;
 }
 
 input {
@@ -21,7 +26,7 @@ input {
     margin: 10px 0;
     border: none;
     border-bottom: 1px solid #999;
-    padding: 6px 30px;
+    padding: 6px 5px;
 }
 
 .form-submit {
@@ -30,9 +35,48 @@ input {
     color: #fff;
     border-bottom: none;
     width: auto;
-    padding: 15px 39px;
+    padding: 6px 40px;
     @include border-radius(5px);
     &:hover {
         background: #4292dc;
     }
+}
+
+#error {
+    color: red;
+    text-align: center;
+    padding: 15px;
+}
+
+.destination-form {
+    display: grid;
+    grid-template-rows: 40px 100px;
+    grid-template-columns: 2fr repeat(3, 1fr);
+    grid-template-rows: 10px 50px;
+    grid-column-gap: 10px;
+    grid-row-gap: 5px;
+}
+
+.destination-form-header1 {
+    grid-area: 1 / 1 / 2 / 2;
+}
+
+.destination-form-city-input {
+    grid-area: 2 / 1 / 3 / 2;
+}
+
+.destination-form-header2 {
+    grid-area: 1 / 2 / 2 / 3;
+}
+
+.destination-form-start-date-input {
+    grid-area: 2 / 2 / 3 / 3;
+}
+
+.destination-form-header3 {
+    grid-area: 1 / 3 / 2 / 4;
+}
+
+.destination-form-end-date-input {
+    grid-area: 2 / 3 / 3 / 4;
 }

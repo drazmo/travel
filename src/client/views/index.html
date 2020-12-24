@@ -11,36 +11,50 @@
 
     <main>
         <section>
-            <h1>Geebers Travel</h1>
-            <form class="mood-form" onsubmit="return Client.handleSubmit(event)">
-                <div class="prompt">Enter a location to visit!</div>
-                <br/>
-                <input id="name" name="input" placeholder="Where would you like to go?" />
-                <br/>
-                <input class="form-submit" type="submit" name="" value="submit" onclick="return Client.handleSubmit(event)" onsubmit="return Client.handleSubmit(event)">
+            <h1>Geebers Travel Planner</h1>
+            <p class="info"> Enter your destination and travel dates to get weather information and things you might see on your travels.</p>
+            <form class="mood-form" onsubmit="return Client.handleSubmit(event)"></form>
+            <div class="destination-form">
+                <div class="destination-form-header1">Destination </div>
+                <div class="destination-form-city-input"><input id="name" name="input" value="Miami" placeholder="ex. Miami, FL?" /> </div>
+                <div class="destination-form-header2">Start Date </div>
+                <div class="destination-form-start-date-input"><input id="start-date" name="input" placeholder="MM/DD/YYYY" /> </div>
+                <div class="destination-form-header3">End Date</div>
+                <div class="destination-form-end-date-input"><input id="end-date" name="input" placeholder="MM/DD/YYYY" /> </div>
+                <div class="destination-form-header-space"> </div>
+                <div class="destination-form-submit"><input class="form-submit" type="submit" name="" value="Go!" onclick="return Client.handleSubmit(event)" onsubmit="return Client.handleSubmit(event)"></div>
+            </div>
+            <div id="error"></div>
             </form>
         </section>
 
-        <section>
-            <div id="city"></div>
-            <div id="weather"></div>
-            <div id="results_start">
-                <img src="./img/sentiment.png" />
-            </div>
-            <div id="results_agree">
-                <img src="./img/agreement.png" />
-            </div>
-            <div id="results_disagree">
-                <img src="./img/disagreement.png" />
-            </div>
-            <div id="results">
-            </div>
-        </section>
+        <div id="results">
+
+            <h2 id="city">Weather for Miami, FL US - Population: </h2>
+            <section id="weather">
+                <div class="weather_result">
+                    <div class="icon"><img src="https://www.weatherbit.io/static/img/icons/t04d.png" /></div>
+                    <div>09/11</div>
+                    <div>Monday</div>
+                    <div>Hi 50&deg; / Low 20&deg;</div>
+                    <div>Thunderstorm with light drizzle</div>
+                </div>
+            </section>
+
+            <h2>What you might see!</h2>
+            <section id="photos">
+
+
+            </section>
+
+            <h2>Enjoy your trip!</h2>
+        </div>
     </main>
 
     <footer>
-        <p>Guillermo Pedraza</p>
-        <span>Photo by <a href="https://unsplash.com/@thematthoward?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Matt Howard</a> on <a href="https://unsplash.com/s/photos/destination?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span>
+        <p>Built by Guillermo Pedraza.
+            <span>Background Photo by <a href="https://unsplash.com/@thematthoward?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Matt Howard</a> on <a href="https://unsplash.com/s/photos/destination?utm_source=unsplash&amp;utm_medium=referral&amp;utm_content=creditCopyText">Unsplash</a></span>
+        </p>
     </footer>
 
     <script>
