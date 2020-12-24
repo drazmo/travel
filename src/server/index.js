@@ -1,13 +1,14 @@
 var path = require('path')
 var https = require('follow-redirects').https;
 var fs = require('fs');
+var dateUtils = require("dateUtils");
 
 const express = require('express')
 const bodyParser = require('body-parser');
 const querystring = require('querystring');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const mockAPIResponse = require('./mockAPI.js')
+const mockAPIResponse = require('./mockAPI.js');
 const fetch = require('node-fetch');
 const app = express();
 
@@ -49,10 +50,20 @@ app.post('/city', async function(req, res) {
 });
 
 app.post('/forecast', async function(req, res) {
-    let result = await getCityForecast(req.body.city);
+    let result = await getCityForecast(req.body.city, new Date(req.body.startDate), new Date(req.body.endDate));
 
     if (result === null) {
         return res.statusCode(401).json({ code: 401, error: true, errorMsg: 'Could not communicate with Weather bit server.' })
+    }
+
+    res.json({ code: 200, data: result });
+});
+
+app.post('/photos', async function(req, res) {
+    let result = await getCityPhotos(req.body.city);
+
+    if (result === null) {
+        return res.statusCode(401).json({ code: 401, error: true, errorMsg: 'Could not communicate with photos pixabay server.' })
     }
 
     res.json({ code: 200, data: result });
@@ -81,7 +92,7 @@ async function getCityInfo(city) {
     }
 }
 
-async function getCityForecast(city) {
+async function getCityForecast(city, startDate, endDate) {
     const model = 'general';
     const lang = 'en';
 
@@ -90,12 +101,43 @@ async function getCityForecast(city) {
 
     try {
         //example call: https://api.weatherbit.io/v2.0/forecast/daily?city=Raleigh,NC&key=API_KEY
-        let response = await fetch(`https://api.weatherbit.io/v2.0/forecast/daily?city=${city}&key=${process.env.WEATHER_BIT_API}`, {
+        let response = await fetch(`https://api.weatherbit.io/v2.0/forecast/daily?units=I&city=${city}&key=${process.env.WEATHER_BIT_API}`, {
             method: "post",
             headers: { 'Accept': 'application/json' }
         });
 
         if (response.status !== 200) throw new Error('Error detected communicating with weather bit cloud.');
+
+        dates = []
+        lastDate = false
+        nextDate = dateUtils.addDays(startDate, -1)
+
+        while (dateUtils.formatDate(nextDate) != dateUtils.formatDate(endDate)) {
+            nextDate = dateUtils.addDays(nextDate, 1);
+            dates.push(formatDate(nextDate));
+        }
+
+        response = await response.json();
+        data = response.data.filter((item) => dates.includes(item.valid_date));
+        response.data = data;
+
+        return response
+    } catch (e) {
+        console.log("Error processing text.", e)
+        return null;
+    }
+}
+
+async function getCityPhotos(city) {
+    const query = querystring.escape(city)
+
+    try {
+        let response = await fetch(`https://pixabay.com/api/?key=${process.env.PIXBAY}&q=${query}&image_type=photo&pretty=true`, {
+            method: "get",
+            headers: { 'Accept': 'application/json' }
+        });
+
+        if (response.status !== 200) throw new Error('Error detected communicating with pixabay.');
 
         return response.json();
     } catch (e) {
@@ -103,3 +145,23 @@ async function getCityForecast(city) {
         return null;
     }
 }
+
+// function formatDate(date) {
+//     var d = new Date(date),
+//         month = '' + (d.getMonth() + 1),
+//         day = '' + d.getDate(),
+//         year = d.getFullYear();
+
+//     if (month.length < 2)
+//         month = '0' + month;
+//     if (day.length < 2)
+//         day = '0' + day;
+
+//     return [year, month, day].join('-');
+// }
+
+// function addDays(date, days) {
+//     var result = new Date(date);
+//     result.setDate(result.getDate() + days);
+//     return result;
+// }
