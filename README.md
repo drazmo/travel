@@ -3,6 +3,11 @@ Guillermo Pedraza for Udacity
 
 Allows user to enter a destination and travel start and end dates. Server will then display the forecasted weather if available. Only 16 days are available from WeatherBit.  It returns city information provided by GeoNames. Finally, three photos of the destination provided by PixaBay are displayed. 
 
+Additional Features:
+   * Allows user to add end date to trip
+   * Adds images from Pixabay
+   * Pulls forcast for multiple days
+   * Incorporates icons into forecast
 
 ## Setting up
 Add API Keys to .env file for GeoNames, WeatherBit and Pixabay.
