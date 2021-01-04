@@ -2,6 +2,8 @@ var path = require('path')
 var https = require('follow-redirects').https;
 var fs = require('fs');
 var dateUtils = require("./dateUtils");
+var cityPhotos = {}
+var cityData = {};
 
 const express = require('express')
 const bodyParser = require('body-parser');
@@ -36,7 +38,7 @@ app.listen(8081, function() {
 })
 
 app.get('/test', function(req, res) {
-    res.send(mockAPIResponse)
+    res.send(mockAPIResponse);
 })
 
 app.post('/city', async function(req, res) {
@@ -76,6 +78,11 @@ async function getCityInfo(city) {
     const query = querystring.escape(city)
     console.log('City Search = ' + query);
 
+    if (query in cityData) {
+        console.log("Using cached city data.");
+        return cityData[query];
+    }
+
     try {
         //example call: http://api.geonames.org/searchJSON?q=london&maxRows=10&username=drazmo
         let response = await fetch(`http://api.geonames.org/searchJSON?q=${query}&maxRows=10&username=${process.env.GEONAMES_USER}`, {
@@ -85,7 +92,8 @@ async function getCityInfo(city) {
 
         if (response.status !== 200) throw new Error('Error detected communicating with geo names.');
 
-        return response.json();
+        cityData[query] = response.json();
+        return cityData[query];
     } catch (e) {
         console.log("Error processing text.", e)
         return null;
@@ -97,7 +105,7 @@ async function getCityForecast(city, startDate, endDate) {
     const lang = 'en';
 
     const query = querystring.escape(city)
-    console.log('City Search = ' + query);
+    console.log('City Forecast Search = ' + query);
 
     try {
         //example call: https://api.weatherbit.io/v2.0/forecast/daily?city=Raleigh,NC&key=API_KEY
@@ -131,6 +139,12 @@ async function getCityForecast(city, startDate, endDate) {
 async function getCityPhotos(city) {
     const query = querystring.escape(city)
 
+
+    if (query in cityPhotos) {
+        console.log("Using cached city photos data.");
+        return cityPhotos[query];
+    }
+
     try {
         let response = await fetch(`https://pixabay.com/api/?key=${process.env.PIXBAY}&q=${query}&image_type=photo&pretty=true`, {
             method: "get",
@@ -139,29 +153,10 @@ async function getCityPhotos(city) {
 
         if (response.status !== 200) throw new Error('Error detected communicating with pixabay.');
 
-        return response.json();
+        cityPhotos[query] = response.json();
+        return cityPhotos[query];
     } catch (e) {
         console.log("Error processing text.", e)
         return null;
     }
 }
-
-// function formatDate(date) {
-//     var d = new Date(date),
-//         month = '' + (d.getMonth() + 1),
-//         day = '' + d.getDate(),
-//         year = d.getFullYear();
-
-//     if (month.length < 2)
-//         month = '0' + month;
-//     if (day.length < 2)
-//         day = '0' + day;
-
-//     return [year, month, day].join('-');
-// }
-
-// function addDays(date, days) {
-//     var result = new Date(date);
-//     result.setDate(result.getDate() + days);
-//     return result;
-// }
