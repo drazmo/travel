@@ -19,7 +19,7 @@ dotenv.config();
 // Automatically allow cross-origin requests
 app.use(cors({ origin: true }));
 
-/* Middleware*/
+// Middleware
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -32,11 +32,12 @@ app.get('/', function(req, res) {
     res.sendFile('../../dist/index.html', { root: __dirname + '/..' })
 })
 
-// designates what port the app will listen to for incoming requests
+// Designates what port the app will listen to for incoming requests
 app.listen(8081, function() {
     console.log('Travel app listening on port 8081!')
 })
 
+// URL's that will issues responses in json
 app.get('/test', function(req, res) {
     res.send(mockAPIResponse);
 })
@@ -71,6 +72,11 @@ app.post('/photos', async function(req, res) {
     res.json({ code: 200, data: result });
 });
 
+/**
+ * @description Gets information about the city from GeoNames service
+ * @param {string} city
+ * @returns {object} Information about the requested city
+ */
 async function getCityInfo(city) {
     const model = 'general';
     const lang = 'en';
@@ -84,7 +90,6 @@ async function getCityInfo(city) {
     }
 
     try {
-        //example call: http://api.geonames.org/searchJSON?q=london&maxRows=10&username=drazmo
         let response = await fetch(`http://api.geonames.org/searchJSON?q=${query}&maxRows=10&username=${process.env.GEONAMES_USER}`, {
             method: "post",
             headers: { 'Accept': 'application/json' }
@@ -100,6 +105,13 @@ async function getCityInfo(city) {
     }
 }
 
+/**
+ * @description Gets 15 day weather forecast for city from WeatherBit
+ * @param {string} city
+ * @param {string} startDate
+ * @param {string} endDate
+ * @returns {object} Returns weather date for dates within the start/end date range if available
+ */
 async function getCityForecast(city, startDate, endDate) {
     const model = 'general';
     const lang = 'en';
@@ -108,7 +120,6 @@ async function getCityForecast(city, startDate, endDate) {
     console.log('City Forecast Search = ' + query);
 
     try {
-        //example call: https://api.weatherbit.io/v2.0/forecast/daily?city=Raleigh,NC&key=API_KEY
         let response = await fetch(`https://api.weatherbit.io/v2.0/forecast/daily?units=I&city=${city}&key=${process.env.WEATHER_BIT_API}`, {
             method: "post",
             headers: { 'Accept': 'application/json' }
@@ -116,6 +127,9 @@ async function getCityForecast(city, startDate, endDate) {
 
         if (response.status !== 200) throw new Error('Error detected communicating with weather bit cloud.');
 
+
+        // Starting with the start date it adds 1 day to the current and checks to see if there is any weather data for that day.
+        // continues until the end date is reached
         dates = []
         lastDate = false
         nextDate = dateUtils.addDays(startDate, -1)
@@ -129,13 +143,18 @@ async function getCityForecast(city, startDate, endDate) {
         data = response.data.filter((item) => dates.includes(item.valid_date));
         response.data = data;
 
-        return response
+        return response;
     } catch (e) {
         console.log("Error processing text.", e)
         return null;
     }
 }
 
+/**
+ * @description Gets photos for the given city from PixBay
+ * @param {string} city
+ * @returns {object} Returns object with urls for images related to the given city
+ */
 async function getCityPhotos(city) {
     const query = querystring.escape(city)
 

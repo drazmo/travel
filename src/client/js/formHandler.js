@@ -1,3 +1,8 @@
+/**
+ * @description Validates form data, sends form data to server and update UI with responses
+ * @param {object} event
+ * @returns Nothing, just updates UI with error message or travel information received from server.
+ */
 export async function handleSubmit(event) {
     event.preventDefault()
     console.log("::: Form Submitted :::")

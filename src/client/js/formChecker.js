@@ -1,3 +1,8 @@
+/**
+ * @description Validates city name
+ * @param {string} inputText
+ * @returns {boolean} Return true if there is at least one character entered otherwise false is returned
+ */
 export function checkForCity(inputText) {
     if (inputText === '' || inputText.length < 1) {
         return false;
@@ -6,7 +11,12 @@ export function checkForCity(inputText) {
     return true;
 }
 
-// Snippet found at: https://stackoverflow.com/questions/276479/javascript-how-to-validate-dates-in-format-mm-dd-yyyy by Adam Leggett
+/**
+ * @description Chckes if date is in valid dd/mm/yyyy format
+ * @param {string} date
+ * @returns {boolean} returns true if date is correctly formated otherwise returns false
+ * @note Snippet found at: https://stackoverflow.com/questions/276479/javascript-how-to-validate-dates-in-format-mm-dd-yyyy by Adam Leggett
+ */
 export function checkValidDate(date) {
     const isLeapYear = (yearNum) => {
         return ((yearNum % 100 === 0) ? (yearNum % 400 === 0) : (yearNum % 4 === 0)) ?
